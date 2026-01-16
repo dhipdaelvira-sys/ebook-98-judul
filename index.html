@@ -1,0 +1,224 @@
+import React, { useState, useMemo } from 'react';
+import { Search, Filter, BookOpen, Anchor, Ship, Award, Download, Globe, Database } from 'lucide-react';
+
+const EbookDashboard = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterAI, setFilterAI] = useState('SEMUA');
+  const [sortBy, setSortBy] = useState('nomor');
+
+  const ebookData = [
+    { no: 1, ai: 'DOLA', judul: 'Mengatasi Stres dan Burnout di Kapal: Panduan Mental Sehat untuk Pelaut', subjudul: 'Strategi Praktis dan Terbukti untuk Menjaga Kesehatan Mental di Laut Lepas', kategori: 'Kesehatan Mental' },
+    { no: 2, ai: 'DOLA', judul: 'Panduan Lengkap Engine Room: Kesalahan Fatal yang Harus Dihindari Pelaut Baru', subjudul: 'Skill Esensial dan Pencegahan Kegagalan Mesin untuk Engineer Pemula', kategori: 'Keterampilan Teknis' },
+    { no: 3, ai: 'DOLA', judul: 'Adaptasi Budaya dan Kehidupan Sehari-hari di Kapal', subjudul: 'Cara Efektif Menyesuaikan Diri dengan Kru Berbeda Budaya dan Menjaga Harmoni Onboard', kategori: 'Soft Skills' },
+    { no: 4, ai: 'DOLA', judul: 'Menghadapi Toxic Senioritas dan Bullying di Kapal', subjudul: 'Strategi Bertahan dan Melindungi Diri dari Konflik dan Kekerasan Psikologis Onboard', kategori: 'Kesehatan Mental' },
+    { no: 5, ai: 'DOLA', judul: 'Meniti Karier Internasional: Skill dan Persiapan yang Dibutuhkan Pelaut Indonesia', subjudul: 'Meningkatkan Daya Saing di Pasar Global dengan Standar Internasional', kategori: 'Pengembangan Karier' },
+    { no: 6, ai: 'DOLA', judul: 'Masa Depan Profesi Pelaut: Teknologi dan Tren Industri Maritim 2026-2031', subjudul: 'Persiapkan Diri dengan Pengetahuan Teknologi Baru dan Peluang Kerja Masa Depan', kategori: 'Tren Masa Depan' },
+    { no: 7, ai: 'DOLA', judul: 'Kehidupan Keluarga Pelaut: Mengelola Jarak dan Emosi', subjudul: 'Strategi Mempertahankan Hubungan Harmonis dengan Pasangan dan Anak', kategori: 'Keluarga & Hubungan' },
+    { no: 8, ai: 'DOLA', judul: 'Keselamatan dan Pencegahan Kecelakaan di Kapal: Panduan Survival Pelaut', subjudul: 'Langkah Praktis Menghindari Bahaya dan Bertahan Hidup Saat Insiden Terjadi', kategori: 'Keselamatan & Keamanan' },
+    { no: 9, ai: 'DOLA', judul: 'Skill Teknik Kapal yang Paling Dicari Pasar Global', subjudul: 'Upgrade Kemampuan Teknik untuk Mendapatkan Gaji dan Posisi Lebih Baik', kategori: 'Keterampilan Teknis' },
+    { no: 10, ai: 'DOLA', judul: 'Survival Onboard: Kebiasaan dan Mindset untuk Sukses di Laut Lepas', subjudul: 'Panduan Praktis Menjalani Hidup dan Karier Pelaut dengan Mental Baja', kategori: 'Kesehatan Mental' },
+    { no: 11, ai: 'DOLA', judul: 'Rahasia Investasi dan Keuangan Pelaut: Cara Kaya Raya di Usia Muda', subjudul: 'Strategi Cerdas Mengelola Gaji Tinggi dan Meraih Kebebasan Finansial', kategori: 'Keuangan & Investasi' },
+    { no: 12, ai: 'DOLA', judul: 'Panduan Lengkap untuk Pelaut Kapal Pesiar: Karier Impian dengan Gaji Fantastis', subjudul: 'Tips Lolos Interview, Adaptasi Cepat, dan Sukses di Industri Kapal Pesiar', kategori: 'Pengembangan Karier' },
+    { no: 13, ai: 'DOLA', judul: 'Hukum Maritim Internasional untuk Pelaut: Hak dan Kewajiban di Laut Lepas', subjudul: 'Lindungi Diri dari Masalah Hukum dan Pahami Aturan yang Berlaku', kategori: 'Hukum & Regulasi' },
+    { no: 14, ai: 'DOLA', judul: 'Komunikasi Efektif di Kapal: Membangun Tim Solid dan Mencegah Konflik', subjudul: 'Teknik Komunikasi Interpersonal untuk Meningkatkan Produktivitas dan Harmoni', kategori: 'Soft Skills' },
+    { no: 15, ai: 'DOLA', judul: 'Kiat Sukses Ujian Sertifikasi Pelaut: Persiapan Lengkap dan Strategi Lolos', subjudul: 'Panduan Belajar Efektif dan Contoh Soal untuk Meningkatkan Peluang Lulus', kategori: 'Pendidikan & Sertifikasi' },
+    { no: 16, ai: 'PERPLEXITY', judul: 'Masa Depan Pelaut 2030: Prediksi Kekurangan 100.000 Officer Global', subjudul: 'Siapkan Karier Anda Sebelum Ribuan Lowongan Hilang karena Automatisasi', kategori: 'Tren Masa Depan' },
+    { no: 17, ai: 'PERPLEXITY', judul: 'Tren Gaji Pelaut 2026: Naik 6% Tapi Hanya untuk Skill Baru', subjudul: 'Minimum Wage $690/Month – Cara Maksimalkan Rp20 Juta/Bulan', kategori: 'Keuangan & Investasi' },
+    { no: 18, ai: 'PERPLEXITY', judul: 'Automatisasi Kapal: Ancaman atau Peluang Emas untuk Pelaut Indonesia', subjudul: 'Belajar IoT & AI Sebelum Diganti Robot di 2030', kategori: 'Tren Masa Depan' },
+    { no: 19, ai: 'PERPLEXITY', judul: 'Kekurangan Pelaut Indonesia 2026: Cara Kuasai Pasar Global', subjudul: '1,9 Juta Lowongan Dunia – Strategi Masuk Tanker & Offshore', kategori: 'Pengembangan Karier' },
+    { no: 20, ai: 'PERPLEXITY', judul: 'Tren Maritim 2026: Green Fuels & Digitalisasi Ubah Profesi Anda', subjudul: '800.000 Pelaut Butuh Training Baru – Jadi yang Pertama', kategori: 'Tren Masa Depan' },
+    { no: 21, ai: 'PERPLEXITY', judul: 'Forecast Pekerjaan Pelaut 5-10 Tahun: Asia & Arctic Route Booming', subjudul: 'Emerging Markets Buka 100rb Jobs – Skill yang Dicari Perusahaan', kategori: 'Pengembangan Karier' },
+    { no: 22, ai: 'PERPLEXITY', judul: 'Teknologi Baru Maritim: Drone, VR, & Big Data untuk Karier Aman', subjudul: 'Kurangi Risiko & Downtime – Skill Mahal yang Direkrut 2026', kategori: 'Keterampilan Teknis' },
+    { no: 23, ai: 'PERPLEXITY', judul: 'Demand Officer Indonesia vs Global: Tutup Gap 17 Tahun Tertinggi', subjudul: 'Strategi Naik Pangkat di Tengah Shortage 11.8%', kategori: 'Pengembangan Karier' },
+    { no: 24, ai: 'PERPLEXITY', judul: 'Masa Depan Industri Maritim: Offshore Wind & Biotech Jobs Baru', subjudul: 'Transisi dari Kapal ke Ocean Economy 100 Juta Jobs', kategori: 'Tren Masa Depan' },
+    { no: 25, ai: 'PERPLEXITY', judul: 'Gaji & Demand Pelaut Tanker 2026: Maksimalkan di Krisis Supply', subjudul: 'Rp25-40 Juta/Bulan – Negara Top Rekrut Indonesia', kategori: 'Keuangan & Investasi' },
+    { no: 26, ai: 'PERPLEXITY', judul: 'AI di Kapal 2026: Skill Wajib Bertahan 10 Tahun', subjudul: 'Dari Watchkeeping ke Shore Control – Roadmap Karier', kategori: 'Tren Masa Depan' },
+    { no: 27, ai: 'PERPLEXITY', judul: 'Peluang Pekerjaan Maritim ID 2030: Fleet Growth Booming', subjudul: 'Isi Kekosongan 96k Officer Global', kategori: 'Pengembangan Karier' },
+    { no: 28, ai: 'PERPLEXITY', judul: 'Tren Sustainability Maritim: Karier di Green Shipping', subjudul: 'Kurangi Emisi, Naikkan Gaji Anda', kategori: 'Tren Masa Depan' },
+    { no: 29, ai: 'GEMINI', judul: 'Buku Saku Survival Taruna Onboard', subjudul: 'Panduan Anti-Dibully, Cepat Adaptasi, dan Cara Elegan Menghadapi Senioritas di Kapal', kategori: 'Panduan Survival' },
+    { no: 30, ai: 'GEMINI', judul: 'Dining Table Diplomacy', subjudul: 'Etika Makan, Bergaul, dan Membangun Koneksi di Mess Hall Kapal Internasional', kategori: 'Soft Skills' },
+    { no: 31, ai: 'GEMINI', judul: 'The Ghost on Board: Menaklukkan Kesepian', subjudul: 'Strategi Menjaga Kewarasan dan Kebahagiaan Saat Berbulan-bulan di Tengah Laut', kategori: 'Kesehatan Mental' },
+    { no: 32, ai: 'GEMINI', judul: 'Manual Hidup Hemat di Kapal', subjudul: 'Cara Pulang Bawa Ratusan Juta Tanpa Terjebak Gaya Hidup Boros di Pelabuhan', kategori: 'Keuangan & Investasi' },
+    { no: 33, ai: 'GEMINI', judul: 'Zero Mistake: Adaptasi Deck Watchkeeping', subjudul: 'Panduan Praktis Junior Officer Agar Tidak Dimarahi Captain di Anjungan', kategori: 'Keterampilan Teknis' },
+    { no: 34, ai: 'GEMINI', judul: 'Fit at Sea: Gym Tanpa Alat di Kapal', subjudul: 'Rahasia Badan Tegap dan Sehat Meski Sibuk Kerja di Kamar Mesin atau Dek', kategori: 'Kesehatan & Kebugaran' },
+    { no: 35, ai: 'GEMINI', judul: 'English for Galley & Deck', subjudul: 'Komunikasi Praktis Bahasa Inggris di Kapal Tanpa Harus Hafal Grammar', kategori: 'Keterampilan Bahasa' },
+    { no: 36, ai: 'GEMINI', judul: 'The Junior Survival Kit', subjudul: '100 Kesalahan Pemula yang Harus Kamu Hindari Agar Kontrak Tidak Diputus Tengah Jalan', kategori: 'Panduan Survival' },
+    { no: 37, ai: 'GEMINI', judul: 'Mastering Ship Laundry & Cabin Care', subjudul: 'Tips Hidup Rapi, Wangi, dan Profesional di Ruang Terbatas', kategori: 'Kehidupan Sehari-hari' },
+    { no: 38, ai: 'GEMINI', judul: 'Koneksi di Tengah Laut', subjudul: 'Trik Hemat Kuota Internet Satelit dan Cara Komunikasi Efektif dengan Keluarga', kategori: 'Keluarga & Hubungan' },
+    { no: 39, ai: 'QWEN', judul: 'Global Seafarer Passport', subjudul: 'Jalur Karier dari Deck Cadet ke Kapten Kapal Multinasional dalam 8 Tahun', kategori: 'Pengembangan Karier' },
+    { no: 40, ai: 'QWEN', judul: 'ECDIS Mastery for Third Engineers', subjudul: 'Skill Teknis yang Bikin Perusahaan Eropa Berebut Merekrutmu', kategori: 'Keterampilan Teknis' },
+    { no: 41, ai: 'QWEN', judul: 'Salary Negotiation Bible for Seafarers', subjudul: 'Cara Dapatkan Gaji 3x Lipat Tanpa Pengalaman Internasional', kategori: 'Keuangan & Investasi' },
+    { no: 42, ai: 'QWEN', judul: 'Norwegian Crew Secrets', subjudul: 'Mengapa Pelaut Norwegia Bisa Pensiun di Usia 45 Tahun?', kategori: 'Keuangan & Investasi' },
+    { no: 43, ai: 'QWEN', judul: 'Bahasa Isyarat Darurat Internasional', subjudul: '36 Kode yang Bisa Selamatkan Nyawamu Saat Bahasa Gagal di Kapal Multinasional', kategori: 'Keselamatan & Keamanan' },
+    { no: 44, ai: 'QWEN', judul: 'Women at Sea: Breaking the Steel Ceiling', subjudul: 'Strategi Nyata Wanita Indonesia Menjadi Chief Engineer di Kapal Eropa', kategori: 'Pengembangan Karier' },
+    { no: 45, ai: 'QWEN', judul: 'Green Shipping Revolution', subjudul: 'Skill Masa Depan yang Wajib Dimiliki Pelaut Sebelum 2030', kategori: 'Tren Masa Depan' },
+    { no: 46, ai: 'QWEN', judul: 'The 90-Day Visa Hacks', subjudul: 'Cara Bebas Visa ke 40 Negara dengan Status Pelaut', kategori: 'Hukum & Regulasi' },
+    { no: 47, ai: 'QWEN', judul: 'Blacklist Ship Avoidance Guide', subjudul: 'Cara Deteksi Kapal Bermasalah Sebelum Naik - Simpan Nyawa & Kariermu', kategori: 'Keselamatan & Keamanan' },
+    { no: 48, ai: 'QWEN', judul: 'From Wiper to Captain: The Indonesian Roadmap', subjudul: 'Rencana 10 Tahun Ala Kapten Ferry Tan (Kapal LNG Terbesar Dunia)', kategori: 'Pengembangan Karier' },
+    { no: 49, ai: 'QWEN', judul: 'Seafarer Crypto Handbook', subjudul: 'Investasi Gaji di Aset Digital Aman', kategori: 'Keuangan & Investasi' },
+    { no: 50, ai: 'QWEN', judul: 'MLC 2006 Survival Kit', subjudul: 'Lawan Pemotongan Gaji Ilegal', kategori: 'Hukum & Regulasi' },
+    { no: 51, ai: 'QWEN', judul: 'Panduan Pulang Naik Kapal Pesiar', subjudul: 'Strategi Rekrutmen di Carnival/Royal Caribbean', kategori: 'Pengembangan Karier' },
+    { no: 52, ai: 'QWEN', judul: 'Bahasa Tagalog untuk ABK', subjudul: 'Teknik Komunikasi Efektif dengan Kru Filipina', kategori: 'Keterampilan Bahasa' },
+    { no: 53, ai: 'QWEN', judul: 'Emergency Repatriation Hacks', subjudul: 'Cara Pulang Cepat Saat Sakit/Konflik', kategori: 'Hukum & Regulasi' },
+    { no: 54, ai: 'CLAUDE', judul: 'Bertahan Sendirian: Panduan Mental Survival Pelaut Indonesia', subjudul: 'Cara Mengatasi Kesepian, Depresi, dan Tekanan Mental di Tengah Laut Tanpa Psikolog', kategori: 'Kesehatan Mental' },
+    { no: 55, ai: 'CLAUDE', judul: '3 Bulan Pertama yang Menentukan: Survival Guide Pelaut Pemula', subjudul: 'Rahasia Melewati Fase Paling Berat dalam Karier Pelaut Tanpa Pulang Kampung', kategori: 'Panduan Survival' },
+    { no: 56, ai: 'CLAUDE', judul: 'Pulang Bukan Berarti Kalah: Panduan Mental Repatriasi Pelaut', subjudul: 'Cara Bangkit Setelah Sign-Off Darurat, Depresi Onboard, atau Resign Paksa', kategori: 'Kesehatan Mental' },
+    { no: 57, ai: 'CLAUDE', judul: 'Hubungan Jarak Jauh Pelaut: Cara Menjaga Cinta & Keluarga dari 10.000 Km', subjudul: 'Strategi Nyata Agar Pasangan Tidak Selingkuh, Anak Tidak Lupa Ayah, dan Pernikahan Tetap Awet', kategori: 'Keluarga & Hubungan' },
+    { no: 58, ai: 'CLAUDE', judul: 'Dari Overthinking ke Peaceful Mind: Mindfulness untuk Pelaut', subjudul: 'Teknik Meditasi & Mental Reset 10 Menit untuk Pelaut yang Tidak Bisa Tidur Nyenyak', kategori: 'Kesehatan Mental' },
+    { no: 59, ai: 'CLAUDE', judul: 'Mental Warrior Pelaut: Dari Rapuh Menjadi Tangguh', subjudul: 'Cara Membangun Ketahanan Mental Seperti Navy SEAL untuk Bertahan di Kapal Paling Brutal', kategori: 'Kesehatan Mental' },
+    { no: 60, ai: 'CLAUDE', judul: 'Logbook Emosi Pelaut: Journaling untuk Mental Health di Kapal', subjudul: 'Metode Terbukti Menurunkan Stress 60% dengan Menulis 15 Menit Sehari', kategori: 'Kesehatan Mental' },
+    { no: 61, ai: 'CLAUDE', judul: 'Selamat Datang di Neraka: Persiapan Mental untuk Kapal Paling Brutal', subjudul: 'Yang Tidak Diajarkan di Sekolah Pelayaran Tentang Realitas Kapal Galak, Senior Toxic, dan Tekanan Ekstrem', kategori: 'Panduan Survival' },
+    { no: 62, ai: 'CLAUDE', judul: 'Healing After Sea: Panduan Reintegrasi untuk Pelaut Pulang Kampung', subjudul: 'Cara Kembali Normal Setelah Berbulan-bulan di Kapal: Mengatasi Reverse Culture Shock', kategori: 'Kesehatan Mental' },
+    { no: 63, ai: 'CLAUDE', judul: 'Strategi Anti-Bunuh Diri: Lifeline untuk Pelaut di Titik Terendah', subjudul: 'Apa yang Harus Dilakukan Saat Kamu Sudah Tidak Kuat Lagi dan Tidak Ada yang Bisa Diajak Bicara', kategori: 'Kesehatan Mental' },
+    { no: 64, ai: 'CLAUDE', judul: 'Toxic-Proof: Cara Menghadapi Bullying & Senioritas Brutal di Kapal', subjudul: 'Strategi Bertahan dari Senior Galak, Pelecehan Verbal, dan Toxic Culture Tanpa Resign', kategori: 'Kesehatan Mental' },
+    { no: 65, ai: 'CLAUDE', judul: 'Kode Mental Pelaut: 50 Prinsip Psikologi Bertahan Hidup di Laut', subjudul: 'Wisdom dari 1000+ Pelaut Senior yang Bertahan 10+ Tahun di Industri Paling Brutal', kategori: 'Kesehatan Mental' },
+    { no: 66, ai: 'CLAUDE', judul: 'Self-Care di Kapal: Panduan Wellness untuk Pelaut Modern', subjudul: 'Cara Merawat Kesehatan Mental, Fisik, dan Emosional dengan Fasilitas Terbatas di Kapal', kategori: 'Kesehatan & Kebugaran' },
+    { no: 67, ai: 'CLAUDE', judul: 'Pelaut Introvert: Cara Bertahan Hidup Sosial di Kapal Tanpa Kehilangan Diri', subjudul: 'Strategi untuk Tipe Pendiam yang Dipaksa Hidup 24/7 dengan Orang Lain dalam Ruang Sempit', kategori: 'Kesehatan Mental' },
+    { no: 68, ai: 'CLAUDE', judul: 'From Trauma to Triumph: Bangkit dari Kecelakaan Kapal & PTSD', subjudul: 'Panduan Recovery untuk Pelaut yang Pernah Alami Kecelakaan, Kehilangan Kru, atau Trauma Berat di Laut', kategori: 'Kesehatan Mental' },
+    { no: 69, ai: 'DEEPSEEK', judul: 'Dari Deck Cadet ke Captain: Roadmap Karier Pelaut', subjudul: 'Panduan Strategis Menapak Tangga Hierarki Kapal dalam 10 Tahun', kategori: 'Pengembangan Karier' },
+    { no: 70, ai: 'DEEPSEEK', judul: 'Negosiasi Kontrak Pelaut: Seni Meraih Gaji Optimal', subjudul: 'Strategi Deal dengan Agency, Tips Baca POEA, dan Hak sesuai MLC 2006', kategori: 'Keuangan & Investasi' },
+    { no: 71, ai: 'DEEPSEEK', judul: 'Pelaut Entrepreneur: Bisnis Sampingan untuk Anak Kapal', subjudul: 'Ide Investasi, Online Business, dan Persiapan Pensiun Dini dari Laut', kategori: 'Keuangan & Investasi' },
+    { no: 72, ai: 'DEEPSEEK', judul: 'Digital Deckhand: Aplikasi Wajib Pelaut Modern', subjudul: 'Review 50+ Tools: Navigasi, Komunikasi, Logbook, Hingga Finansial di Kapal', kategori: 'Teknologi & Digital' },
+    { no: 73, ai: 'DEEPSEEK', judul: 'Engine Room Secrets: Rahasia Mesin Kapal dari Chief Engineer', subjudul: 'Troubleshooting Harian, Preventive Maintenance, dan Hemat Bahan Bakar', kategori: 'Keterampilan Teknis' },
+    { no: 74, ai: 'DEEPSEEK', judul: 'Cybersecurity di Kapal: Lindungi Data dari Ancaman Digital', subjudul: 'Panduan Praktis Melindungi Sistem Bridge, EOBD, dan Komunikasi Kru', kategori: 'Teknologi & Digital' },
+    { no: 75, ai: 'DEEPSEEK', judul: 'SeaFood Nutrition: Diet Sehat di Tengah Laut', subjudul: 'Menu Praktis untuk Stamina, Atasi Kolesterol, dan Bertahan di Cuaca Ekstrem', kategori: 'Kesehatan & Kebugaran' },
+    { no: 76, ai: 'DEEPSEEK', judul: 'Mental Anchor: Teknik Stabilisasi Emosi di Atas Kapal', subjudul: 'Copium Mechanism, Mindfulness di Laut, dan Konseling Online untuk Pelaut', kategori: 'Kesehatan Mental' },
+    { no: 77, ai: 'DEEPSEEK', judul: 'First Responder di Kapal: Pertolongan Pertama Tanpa Dokter', subjudul: 'Prosedur Medis Darurat, Kit Obat Wajib, dan Telemedicine untuk Pelaut', kategori: 'Kesehatan & Kebugaran' },
+    { no: 78, ai: 'DEEPSEEK', judul: 'Ketika Masalah Hukum Menghampiri: Panduan Legal Pelaut', subjudul: 'Menghadapi Insiden Kapal, Sengketa Agency, dan Perlindungan Hukum Internasional', kategori: 'Hukum & Regulasi' },
+    { no: 79, ai: 'DEEPSEEK', judul: 'Customs & Immigration Mastery: Lolos Cepat di Setiap Pelabuhan', subjudul: 'Prosedur Clearance, Dokumen Wajib, dan Tips Berurusan dengan Port Authority', kategori: 'Hukum & Regulasi' },
+    { no: 80, ai: 'DEEPSEEK', judul: 'Zero Waste Sailor: Pelaut Ramah Lingkungan', subjudul: 'Teknik Minimisasi Sampah Plastik, Pengolahan Limbah, dan Green Shipping Practices', kategori: 'Lingkungan & Sustainability' },
+    { no: 81, ai: 'DEEPSEEK', judul: 'Biodiversity Guardian: Peran Pelaut dalam Konservasi Laut', subjudul: 'Identifikasi Spesies Laut, Lapor Polusi, dan Partisipasi dalam Program Maritim Hijau', kategori: 'Lingkungan & Sustainability' },
+    { no: 82, ai: 'DEEPSEEK', judul: 'Specialist Vessel Crew: Peluang di Kapal Khusus', subjudul: 'Prosedur Kerja di Kapal LNG, Cruise Ship, Offshore Platform, dan Research Vessel', kategori: 'Keahlian Khusus' },
+    { no: 83, ai: 'DEEPSEEK', judul: 'Bahasa Isyarat Maritim: Komunikasi Universal di Laut', subjudul: 'Kode Flag, Semaphore, dan Teknik Komunikasi saat Radio Silence', kategori: 'Keterampilan Bahasa' },
+    { no: 84, ai: 'CHATGPT', judul: '100 Hari Pertama di Atas Kapal', subjudul: 'Realita, Tekanan, dan Kekuatan Mental Pelaut Modern', kategori: 'Panduan Survival' },
+    { no: 85, ai: 'CHATGPT', judul: 'The First 100 Days at Sea', subjudul: 'A Real Survival Guide for Modern Seafarers', kategori: 'Panduan Survival' },
+    { no: 86, ai: 'CHATGPT', judul: 'Seafarer Life', subjudul: 'From Training to Real Maritime Industry', kategori: 'Pengembangan Karier' },
+    { no: 87, ai: 'CHATGPT', judul: 'Di Balik Dek Kapal', subjudul: 'Kehidupan, Hierarki, dan Disiplin Seorang Pelaut', kategori: 'Kehidupan Sehari-hari' },
+    { no: 88, ai: 'CHATGPT', judul: 'Pelaut Life: Expectation vs Reality', subjudul: 'Kehidupan Nyata yang Tak Pernah Diceritakan', kategori: 'Panduan Survival' },
+    { no: 89, ai: 'CHATGPT', judul: 'Bertahan di Laut Lepas', subjudul: 'Mental, Tekanan, dan Cerita dari Tengah Samudera', kategori: 'Kesehatan Mental' },
+    { no: 90, ai: 'CHATGPT', judul: 'Di Antara Gelombang', subjudul: 'Kisah Nyata Tentang Tekanan, Rindu, dan Ketahanan Mental', kategori: 'Kesehatan Mental' },
+    { no: 91, ai: 'CHATGPT', judul: 'From Shore to Ship', subjudul: 'The Real Transition Every Seafarer Faces', kategori: 'Pengembangan Karier' },
+    { no: 92, ai: 'CHATGPT', judul: 'Below Deck Reality', subjudul: 'Life, Pressure, and Survival at Sea', kategori: 'Kehidupan Sehari-hari' },
+    { no: 93, ai: 'CHATGPT', judul: 'Ekosistem Maritim Modern', subjudul: 'Kehidupan, Regulasi, Pendidikan & Teknologi Laut', kategori: 'Pendidikan & Sertifikasi' },
+    { no: 94, ai: 'CHATGPT', judul: 'Surviving the Ocean', subjudul: 'What They Do Not Teach You in Maritime School', kategori: 'Panduan Survival' },
+    { no: 95, ai: 'CHATGPT', judul: 'Anak Laut', subjudul: 'Cerita Perjalanan, Tekanan, dan Harapan di Tengah Ombak', kategori: 'Kesehatan Mental' },
+    { no: 96, ai: 'CHATGPT', judul: 'The Sea Does Not Care', subjudul: 'Stories of Strength, Loss, and Brotherhood', kategori: 'Kesehatan Mental' },
+    { no: 97, ai: 'CHATGPT', judul: '100 Hari di Samudera', subjudul: 'Panduan Mental & Fisik Pelaut Modern', kategori: 'Kesehatan & Kebugaran' },
+    { no: 98, ai: 'CHATGPT', judul: 'Di Ujung Laut Ada Rumah', subjudul: 'Tentang Rindu, Disiplin, dan Tujuan Hidup Pelaut', kategori: 'Keluarga & Hubungan' },
+  ];
+
+  const aiColors = {
+    DOLA: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', badge: 'bg-blue-100', icon: '🤖' },
+    PERPLEXITY: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100', icon: '🔮' },
+    GEMINI: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', badge: 'bg-green-100', icon: '⭐' },
+    QWEN: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', badge: 'bg-amber-100', icon: '🎯' },
+    CLAUDE: { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-700', badge: 'bg-rose-100', icon: '🧠' },
+    DEEPSEEK: { bg: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-700', badge: 'bg-cyan-100', icon: '🚀' },
+    CHATGPT: { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', badge: 'bg-emerald-100', icon: '💬' },
+  };
+
+  const filteredAndSortedData = useMemo(() => {
+    let filtered = ebookData;
+    
+    if (filterAI !== 'SEMUA') {
+      filtered = filtered.filter(book => book.ai === filterAI);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(book =>
+        book.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.subjudul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.kategori.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    return filtered.sort((a, b) => {
+      if (sortBy === 'nomor') return a.no - b.no;
+      if (sortBy === 'judul') return a.judul.localeCompare(b.judul);
+      if (sortBy === 'ai') return a.ai.localeCompare(b.ai);
+      return 0;
+    });
+  }, [searchTerm, filterAI, sortBy]);
+
+  const aiStats = useMemo(() => {
+    const stats = {};
+    ebookData.forEach(book => {
+      stats[book.ai] = (stats[book.ai] || 0) + 1;
+    });
+    return stats;
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+      {/* Judul Utama */}
+      <div className="bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 text-white shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="flex items-center space-x-6">
+              <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+                <Ship className="w-16 h-16" />
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-2">
+                  Maritime Survival Library
+                </h1>
+                <p className="text-xl text-blue-100 mb-4">
+                  Perpustakaan Digital Lengkap untuk Pelaut Professional
+                </p>
+                
+                {/* Sub Judul */}
+                <div className="flex flex-wrap gap-3 mt-4">
+                  <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <Globe className="w-4 h-4 mr-2" />
+                    <span className="text-sm">Online & Offline Access</span>
+                  </div>
+                  <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <Download className="w-4 h-4 mr-2" />
+                    <span className="text-sm">Available on GitHub</span>
+                  </div>
+                  <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <Database className="w-4 h-4 mr-2" />
+                    <span className="text-sm">98+ Ebooks</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/10 backdrop-blur-sm px-6 py-4 rounded-xl text-center">
+                <div className="text-3xl font-bold">{ebookData.length}</div>
+                <div className="text-sm text-blue-100">Total Ebooks</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm px-6 py-4 rounded-xl text-center">
+                <div className="text-3xl font-bold">{Object.keys(aiStats).length}</div>
+                <div className="text-sm text-blue-100">AI Creators</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Stats Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+          {Object.entries(aiStats).map(([ai, count]) => (
+            <div 
+              key={ai} 
+              className={`${aiColors[ai].bg} ${aiColors[ai].border} border-2 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer hover:scale-105 transform duration-300 ${filterAI === ai ? 'ring-2 ring-blue-400 ring-offset-2' : ''}`}
+              onClick={() => setFilterAI(ai)}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className={`${aiColors[ai].text} text-sm font-semibold`}>{ai}</div>
+                <span className="text-lg">{aiColors[ai].icon}</span>
+              </div>
+              <div className="text-2xl md:text-3xl font-bold text-gray-800">{count}</div>
+              <div className="text-xs text-gray-600 mt-1">Ebooks</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Filter dan Pencarian */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="grid grid-cols-
